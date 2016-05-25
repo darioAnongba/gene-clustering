@@ -22,9 +22,9 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   
   residue = sum((M - make.block(rep(0,n), temporalMean))^2)
   
-  #if(BIC) residue = residue + sigma2 * (m + 1)*log(n*m)
-  # if(BIC) residue = residue + sigma2 * (m + 1)
-  if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
+  # if(BIC) residue = residue + sigma2 * (m + 1)*log(n*m)
+  if(BIC) residue = residue + sigma2 * (m + 1)
+  # if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
   
   
   residue
@@ -67,8 +67,8 @@ residueModel2 = function(M, BIC=T, sigma2, nDataPoints)
   residue = sum((M - make.block(alpha*sin + beta*cos, temporalMean))^2)
 
   # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(n*m)
-  # if(BIC) residue = residue + sigma2 * (m + 2 + 1)
-  if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
+  if(BIC) residue = residue + sigma2 * (m + 2 + 1)
+  # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
   
   
   c(residue, alpha, beta)
@@ -169,5 +169,6 @@ partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma2=0)
 	     types = type,
 	     alpha = alpha,
 	     beta = beta,
-	     r1r2 = r1r2)
+	     res.1 = r1,
+	     res.2 = r2)
 }
