@@ -1,14 +1,11 @@
 make.block=function(a,b) outer(a,b,"+")
-
 scalarprod=function(x,y) mean(x*y)
-
 
 model1 = function(M, BIC=T, sigma2)
 {
   n = nrow(M)
-  m = ncol(M)
-  
-  temporalMean = apply(M,2,mean)
+
+  temporalMean = apply(M, 2, mean)
   
   make.block(rep(0,n), temporalMean)
 }
@@ -26,7 +23,6 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   if(BIC) residue = residue + sigma2 * (m + 1)
   # if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
   
-  
   residue
 }
 
@@ -34,7 +30,7 @@ model2 = function (M, BIC=T, sigma2) {
   n = nrow(M)
   m = ncol(M)
   
-  temporalMean = apply(M,2,mean)
+  temporalMean = apply(M, 2, mean)
   
   sin = sin(2*pi/24*seq(0,46,by=2))
   cos = cos(2*pi/24*seq(0,46,by=2))
@@ -70,7 +66,6 @@ residueModel2 = function(M, BIC=T, sigma2, nDataPoints)
   if(BIC) residue = residue + sigma2 * (m + 2 + 1)
   # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
   
-  
   c(residue, alpha, beta)
 }
 
@@ -85,7 +80,8 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 	alpha = 0
 	beta = 0
 	
-	r1r2 = 0
+	res.1 = 0
+	res.2 = 0
 	
 	if(m < min.size | m > max.size) residue = Inf
 	else {
@@ -102,17 +98,17 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 		imin = which.min(r)
 		residue = r[imin]
 		type = imin
-		r1r2 = res.1 - res.2
 	}
 	
-	c(residue, type, alpha, beta, r1r2)
+	c(residue, type, res.1, res.2, alpha, beta)
 }
 
-partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma2=0)
+partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma=0)
 {
-  if(is.null(sigma2) & BIC) sigma2=var(as.vector(M))
 	n = nrow(M)
 	m = ncol(M)
+	
+	sigma2 = sigma^2
 	
 	scores	= rep(0,m)
 	change	= rep(0,m)
@@ -121,7 +117,8 @@ partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma2=0)
 	alpha = rep(0, m)
 	beta = rep(0, m)
 
-	r1r2 = rep(0, m)
+	res.1 = rep(0, m)
+	res.2 = rep(0, m)
 	
 	for (k in 1:m)
 	{
@@ -146,12 +143,13 @@ partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma2=0)
 		alpha[k] = ss[3, jmin]
 		beta[k] = ss[4, jmin]
 		
-		r1r2[k] = ss[5, jmin]
+		res.1[k] = ss[5, jmin]
+		res.2[k] = ss[6, jmin]
 	}
 
 	#backtrack
-	bk=change[m]
-	bk.t=type[m]
+	bk = change[m]
+	bk.t = type[m]
 	while(bk[1]>1)
 	{
 		tmp = bk[1]-1
@@ -159,16 +157,16 @@ partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma2=0)
 		bk.t = c(type[tmp],bk.t)
 	}
 
-	sizes=diff(c(bk, ncol(M)+1))
-	scores=scores/(n*m)
+	sizes = diff(c(bk, ncol(M)+1))
+	scores = scores / (n*m)
+	
 	list(sizes = sizes,
-	     block.type = bk.t,
-	     start.pos = bk,
-	     changes = change,
+	     types= bk.t,
 	     scores = scores,
-	     types = type,
 	     alpha = alpha,
 	     beta = beta,
-	     res.1 = r1,
-	     res.2 = r2)
+	     res1 = res.1,
+	     res2 = res.2,
+	     sigma = sigma
+	     )
 }

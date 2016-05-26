@@ -1,20 +1,51 @@
 source('seg.r')
 
-rna = read.table('rawData/RNA_seq_chr7.txt', sep="\t", header=T)
+chrN = c('X', 'Y')
 
-#sigmas = c(0, 0.0005, 0.001, 0.05, .075, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.25, 0.4, 0.5, 0.75, 1, 10)
-sigmas = c(0.4)
-
-#Choice of matrix to use
-M = rna[, 1:300]
-
-for(sigma in sigmas) {
-  res = partitioning(M, sigma2=sigma^2, BIC=T, min.size=1, max.size=300)
-
-  print(paste('sigma :', sigma))
-
-  name = paste('tests/partitions_sigma_', sigma, '.Rda', sep = '')
-  saveRDS(res, name)
+for(n in chrN) {
+  chrName = paste("chr", n, sep = "")
+  filenameToRead = paste("rawData/RNA_seq_", chrName, ".txt", sep = "")
   
-  cat('\n')
+  print(chrName)
+  
+  rna = read.table(filenameToRead, sep="\t", header=T)
+  
+  sigmas = c(0, 0.05, 0.1, 0.13, 0.16, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 5)
+  
+  #Choice of matrix to use
+  M = rna
+  
+  for(sigma in sigmas) {
+    partitions = partitioning(M, sigma=sigma, BIC=T, min.size=1, max.size=ncol(M))
+    
+    #Saving the gene names and parameters
+    jj=1
+    K=1
+    
+    Names = list()
+    Mu = list()
+    
+    for(k in partitions$sizes)
+    {
+      kk = jj + k-1
+      x = M[ , jj:kk]
+      x = as.matrix(x)
+      if(ncol(x)==1) colnames(x) = colnames(M)[jj]
+      
+      Names[[K]] = colnames(x)
+      
+      Mu[[K]] = apply(x, 2, mean)
+      
+      jj=kk+1
+      K=K+1
+    }
+    
+    partitions[["Names"]] = Names
+    partitions[["Mu"]] = Mu
+    
+    fileNameToSave = paste('partitions/', chrName, '/partitions_sigma_', sigma, '.Rda', sep = '')
+    saveRDS(partitions, fileNameToSave)
+    
+    cat('\n')
+  }
 }
