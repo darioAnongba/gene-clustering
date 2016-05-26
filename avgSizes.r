@@ -1,5 +1,5 @@
 chrN = c('chr1', 'chrX', 'chrY')
-sigmas = c(0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+sigmas = c(0, 0.05, 0.1, 0.13, 0.16, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 5)
 
 for (chr in chrN) {
   sizes = rep(0, length(sigmas))
@@ -16,10 +16,6 @@ for (chr in chrN) {
     data[[name]] <- partition$sizes
     sizes[i] <- mean(partition$sizes)
   }
-  
-  #Plot the boxplot
-  mainTitle = paste('Boxplot of partition sizes,', chr)
-  boxplot(data, main=mainTitle, xlab='sigma values', ylab='Sizes', las=2, col="5")
   
   #plot the simple mean
   mainTitle = paste('Average size of partitions per sigma,', chr)

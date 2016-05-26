@@ -1,22 +1,24 @@
 source('seg.r')
 
-chrN = c('X', 'Y')
+# chrN = c('chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10',
+#          'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19',
+#          'chrX', 'chrY')
 
-for(n in chrN) {
-  chrName = paste("chr", n, sep = "")
-  filenameToRead = paste("rawData/RNA_seq_", chrName, ".txt", sep = "")
-  
-  print(chrName)
-  
-  rna = read.table(filenameToRead, sep="\t", header=T)
-  
-  sigmas = c(0, 0.05, 0.1, 0.13, 0.16, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 5)
+chrN = c('chr11', 'chr12', 'chr13', 'chr14')
+sigmas = c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 5, 10)
+
+for(chr in chrN) {
+  print(chr)
   
   #Choice of matrix to use
+  filenameToRead = paste("rawData/RNA_seq_", chr, ".txt", sep = "")
+  rna = read.table(filenameToRead, sep="\t", header=T)
   M = rna
+  print(dim(M))
   
   for(sigma in sigmas) {
-    partitions = partitioning(M, sigma=sigma, BIC=T, min.size=1, max.size=ncol(M))
+    print(sigma)
+    partitions = partitioning(M, sigma=sigma, BIC=T, min.size=1, max.size=50)
     
     #Saving the gene names and parameters
     jj=1
@@ -43,7 +45,7 @@ for(n in chrN) {
     partitions[["Names"]] = Names
     partitions[["Mu"]] = Mu
     
-    fileNameToSave = paste('partitions/', chrName, '/partitions_sigma_', sigma, '.Rda', sep = '')
+    fileNameToSave = paste('partitions/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
     saveRDS(partitions, fileNameToSave)
     
     cat('\n')

@@ -1,7 +1,7 @@
 make.block=function(a,b) outer(a,b,"+")
 scalarprod=function(x,y) mean(x*y)
 
-model1 = function(M, BIC=T, sigma2)
+model1 = function(M)
 {
   n = nrow(M)
 
@@ -17,7 +17,7 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   
   temporalMean = apply(M, 2, mean)
   
-  residue = sum((M - make.block(rep(0,n), temporalMean))^2)
+  residue = sum((M - model1(M))^2)
   
   # if(BIC) residue = residue + sigma2 * (m + 1)*log(n*m)
   if(BIC) residue = residue + sigma2 * (m + 1)
@@ -26,7 +26,7 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   residue
 }
 
-model2 = function (M, BIC=T, sigma2) {
+model2 = function(M) {
   n = nrow(M)
   m = ncol(M)
   
@@ -60,7 +60,7 @@ residueModel2 = function(M, BIC=T, sigma2, nDataPoints)
   alpha = mean(a.s)
   beta = mean(a.c)
   
-  residue = sum((M - make.block(alpha*sin + beta*cos, temporalMean))^2)
+  residue = sum((M - model2(M))^2)
 
   # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(n*m)
   if(BIC) residue = residue + sigma2 * (m + 2 + 1)
@@ -103,7 +103,7 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 	c(residue, type, res.1, res.2, alpha, beta)
 }
 
-partitioning = function(M, min.size=2, max.size=30, BIC=T, sigma=0)
+partitioning = function(M, min.size, max.size, BIC, sigma)
 {
 	n = nrow(M)
 	m = ncol(M)
