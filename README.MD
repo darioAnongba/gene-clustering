@@ -44,6 +44,10 @@ The partitions files consist of a list of parameters :
   - $Names : A list (of size length(sizes)) of vectors containing the names of the genes in each partition. Names[i] is the vector of the gene names in the partition of index i.
   - $Mu : A list of mu (temporal mean) values for each partition (each gene has its own mu value).
 
+In order to load the files from a script, use the readRDS function, for example from the "scripts" folder to read the file of sigma 0.2 from chromosome 7:
+```sh
+partitions <- readRDS(file = '../partitions/chr7/partitions_sigma_0.2.Rda')
+```
 ##### Graphics
 Folder containing different graphics and plots of the data. They are, for most, self-explanatory.
 
