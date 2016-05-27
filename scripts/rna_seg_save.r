@@ -4,21 +4,21 @@ source('seg.r')
 #          'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19',
 #          'chrX', 'chrY')
 
-chrN = c('chr11', 'chr12', 'chr13', 'chr14')
+chrN = c('chr16', 'chr17', 'chr18', 'chr19', 'chrX', 'chrY')
 sigmas = c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 5, 10)
 
 for(chr in chrN) {
   print(chr)
   
   #Choice of matrix to use
-  filenameToRead = paste("rawData/RNA_seq_", chr, ".txt", sep = "")
+  filenameToRead = paste("../rawData/RNA_seq_", chr, ".txt", sep = "")
   rna = read.table(filenameToRead, sep="\t", header=T)
   M = rna
   print(dim(M))
   
   for(sigma in sigmas) {
     print(sigma)
-    partitions = partitioning(M, sigma=sigma, BIC=T, min.size=1, max.size=50)
+    partitions = partitioning(M, sigma=sigma, BIC=T, min.size=1, max.size=100)
     
     #Saving the gene names and parameters
     jj=1
@@ -45,7 +45,7 @@ for(chr in chrN) {
     partitions[["Names"]] = Names
     partitions[["Mu"]] = Mu
     
-    fileNameToSave = paste('partitions/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
+    fileNameToSave = paste('../partitions/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
     saveRDS(partitions, fileNameToSave)
     
     cat('\n')
