@@ -10,9 +10,9 @@ findCuttofs <- function(chr, cuttof, nGenes, nTimes)
   
   percentage = length(which(r1r2 > cuttof)) / length(r1r2)
   
-  sigma = cuttof / (2 * log(nGenes*nTimes))
+  sigma2 = cuttof / (2 * log(nGenes*nTimes))
   
-  c(percentage, sigma)
+  c(percentage, sigma2)
 }
 
 model1 = function(M)
@@ -125,14 +125,13 @@ partitioning = function(M, min.size, max.size, BIC, cuttof)
   sigmaAndPercentage = findCuttofs(chr = chr, cuttof = cuttof, nGenes = m, nTimes = n)
   
   percentage = round(sigmaAndPercentage[1] * 100, 2)
-  sigma = sigmaAndPercentage[2]
+  sigma2 = sigmaAndPercentage[2]
+  sigma = sqrt(sigma2)
   
 	print(paste('Number of genes :', m))
 	print(paste('Maximum partition size :', max.size))
 	print(paste('Percentage of blocks with circadian model: ', percentage, '%', sep = ''))
 	print(paste('Value of sigma :', sigma))
-	
-	sigma2 = sigma^2
 	
 	scores	= rep(0,m)
 	change	= rep(0,m)
@@ -184,16 +183,19 @@ partitioning = function(M, min.size, max.size, BIC, cuttof)
 	sizes = diff(c(bk, ncol(M)+1))
 	scores = scores / (n*m)
 	
+	rPercentage = length(which(type == 2)) / length(type)
+
 	list(sizes = sizes,
 	     block.types= bk.t,
 	     types = type,
 	     scores = scores,
 	     res1 = res.1,
 	     res2 = res.2,
-	     alpha = alpha,
-	     beta = beta,
+	     alphas = alpha,
+	     betas = beta,
 	     cuttof = cuttof,
-	     percentage = percentage,
+	     percentage.theoretical = percentage,
+	     percentage.real = rPercentage,
 	     sigma = sigma,
 	     max.size = max.size
 	     )

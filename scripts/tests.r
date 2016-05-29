@@ -1,4 +1,4 @@
-chrN = c('chr10')
+chrN = c('chrY')
 cuttofs = c(0.1)
 
 for(chr in chrN) {

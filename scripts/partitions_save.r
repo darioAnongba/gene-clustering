@@ -1,5 +1,5 @@
-source('seg.r')
-args<-commandArgs(TRUE)
+source('partitioning2.r')
+args <- commandArgs(TRUE)
 
 chr = args[1]
 cuttof = as.numeric(args[2])
@@ -38,3 +38,5 @@ partitions[["Mu"]] = Mu
 
 fileNameToSave = paste('../partitions/', chr, '/partitions_cuttof_', cuttof, '.Rda', sep = '')
 saveRDS(partitions, fileNameToSave)
+
+print("Done")
