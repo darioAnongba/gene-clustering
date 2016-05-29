@@ -183,7 +183,7 @@ partitioning = function(M, min.size, max.size, BIC, cuttof)
 	sizes = diff(c(bk, ncol(M)+1))
 	scores = scores / (n*m)
 	
-	rPercentage = length(which(type == 2)) / length(type)
+	rPercentage = round(length(which(type == 2)) / length(type) * 100, 2)
 
 	list(sizes = sizes,
 	     block.types= bk.t,

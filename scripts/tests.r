@@ -1,5 +1,5 @@
-chrN = c('chrY')
-cuttofs = c(0.1)
+chrN = c('chr19')
+cuttofs = c(0.2)
 
 for(chr in chrN) {
   #Choice of matrix to use
@@ -10,6 +10,7 @@ for(chr in chrN) {
     filename = paste('../partitions/', chr, '/partitions_cuttof_', cuttof, '.Rda', sep = '')
     partitions <- readRDS(file = filename)
     
-    print(length(which(partitions$types == 2)) / length(partitions$types))
+    print(partitions$percentage.theoretical)
+    print(partitions$percentage.real)
   }
 }
