@@ -1,9 +1,9 @@
 source('seg.r')
 
 # chrN = c('chr1', 'chrX', 'chrY')
-chrN = c('chr7')
+chrN = c('chr10')
 # sigmas = c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 5, 10)
-sigmas = c(0.2)
+sigmas = c(0)
 
 for(chr in chrN) {
   #Choice of matrix to use
@@ -14,8 +14,8 @@ for(chr in chrN) {
     filename = paste('../partitions/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
     partitions <- readRDS(file = filename)
     
-    print(paste("sigma : ", sigma))
-    print(partitions)
+    # print(paste("sigma : ", sigma))
+    # print(partitions)
     
     # #Plotting of the models
     # jj=1
@@ -53,6 +53,10 @@ for(chr in chrN) {
     # 
     # cat("\n")
     # cat("\n")
+    
+    s <- partitions$alpha - partitions$beta
+    
+    print(s)
     
     readline()
   }

@@ -1,6 +1,20 @@
 make.block=function(a,b) outer(a,b,"+")
 scalarprod=function(x,y) mean(x*y)
 
+findCuttofs <- function(chr, cuttof, nGenes, nTimes)
+{
+  filename = paste("../partitions/", chr, "/partitions_sigma_0.Rda", sep = "")
+  partitions <- readRDS(filename)
+  
+  r1r2 = partitions$alpha - partitions$beta
+  
+  percentage = length(which(r1r2 > cuttof)) / length(r1r2)
+  
+  sigma = cuttof / (2 * log(nGenes*nTimes))
+  
+  c(percentage, sigma)
+}
+
 model1 = function(M)
 {
   n = nrow(M)
@@ -19,9 +33,8 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   
   residue = sum((M - model1(M))^2)
   
-  # if(BIC) residue = residue + sigma2 * (m + 1)*log(n*m)
-  if(BIC) residue = residue + sigma2 * (m + 1)
-  # if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
+  # if(BIC) residue = residue + sigma2 * (m + 1)
+  if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
   
   residue
 }
@@ -62,9 +75,8 @@ residueModel2 = function(M, BIC=T, sigma2, nDataPoints)
   
   residue = sum((M - model2(M))^2)
 
-  # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(n*m)
-  if(BIC) residue = residue + sigma2 * (m + 2 + 1)
-  # if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
+  # if(BIC) residue = residue + sigma2 * (m + 2 + 1)
+  if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
   
   c(residue, alpha, beta)
 }
@@ -103,10 +115,22 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 	c(residue, type, res.1, res.2, alpha, beta)
 }
 
-partitioning = function(M, min.size, max.size, BIC, sigma)
+partitioning = function(M, min.size, max.size, BIC, cuttof)
 {
-	n = nrow(M)
-	m = ncol(M)
+  print(paste('Computing the partitions of', chr, 'for cuttof:', cuttof))
+  
+  n = nrow(M)
+  m = ncol(M)
+  
+  sigmaAndPercentage = findCuttofs(chr = chr, cuttof = cuttof, nGenes = m, nTimes = n)
+  
+  percentage = round(sigmaAndPercentage[1] * 100, 2)
+  sigma = sigmaAndPercentage[2]
+  
+	print(paste('Number of genes :', m))
+	print(paste('Maximum partition size :', max.size))
+	print(paste('Percentage of blocks with circadian model: ', percentage, '%', sep = ''))
+	print(paste('Value of sigma :', sigma))
 	
 	sigma2 = sigma^2
 	
@@ -114,12 +138,12 @@ partitioning = function(M, min.size, max.size, BIC, sigma)
 	change	= rep(0,m)
 	type	= rep(0,m)
 	
-	alpha = rep(0, m)
-	beta = rep(0, m)
-
 	res.1 = rep(0, m)
 	res.2 = rep(0, m)
 	
+	alpha = rep(0, m)
+	beta = rep(0, m)
+
 	for (k in 1:m)
 	{
 		if(k == 1) s = c(0)
@@ -135,16 +159,16 @@ partitioning = function(M, min.size, max.size, BIC, sigma)
 		            nDataPoints=n*m)
 		
 		s.tmp = s + ss[1,]
+		
 		jmin = which.min(s.tmp)
+		
 		scores[k] = s.tmp[jmin]
 		change[k] = jmin
 		type[k] = ss[2,jmin]
-		
-		alpha[k] = ss[3, jmin]
-		beta[k] = ss[4, jmin]
-		
-		res.1[k] = ss[5, jmin]
-		res.2[k] = ss[6, jmin]
+		res.1[k] = ss[3, jmin]
+		res.2[k] = ss[4, jmin]
+		alpha[k] = ss[5, jmin]
+		beta[k] = ss[6, jmin]
 	}
 
 	#backtrack
@@ -161,12 +185,16 @@ partitioning = function(M, min.size, max.size, BIC, sigma)
 	scores = scores / (n*m)
 	
 	list(sizes = sizes,
-	     types= bk.t,
+	     block.types= bk.t,
+	     types = type,
 	     scores = scores,
-	     alpha = alpha,
-	     beta = beta,
 	     res1 = res.1,
 	     res2 = res.2,
-	     sigma = sigma
+	     alpha = alpha,
+	     beta = beta,
+	     cuttof = cuttof,
+	     percentage = percentage,
+	     sigma = sigma,
+	     max.size = max.size
 	     )
 }

@@ -4,8 +4,7 @@ source('seg.r')
 #          'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19',
 #          'chrX', 'chrY')
 
-chrN = c('chr16', 'chr17', 'chr18', 'chr19', 'chrX', 'chrY')
-sigmas = c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 5, 10)
+# sigmas = c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 5, 10)
 
 for(chr in chrN) {
   print(chr)
@@ -45,7 +44,7 @@ for(chr in chrN) {
     partitions[["Names"]] = Names
     partitions[["Mu"]] = Mu
     
-    fileNameToSave = paste('../partitions/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
+    fileNameToSave = paste('../tests/', chr, '/partitions_sigma_', sigma, '.Rda', sep = '')
     saveRDS(partitions, fileNameToSave)
     
     cat('\n')
