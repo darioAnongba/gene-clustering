@@ -115,7 +115,7 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 	c(residue, type, res.1, res.2, alpha, beta)
 }
 
-partitioning = function(M, min.size, max.size, BIC, cuttof)
+partitioning = function(M, min.size=1, max.size=100, BIC, cuttof)
 {
   print(paste('Computing the partitions of', chr, 'for cuttof:', cuttof))
   
