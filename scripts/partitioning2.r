@@ -1,18 +1,18 @@
 make.block=function(a,b) outer(a,b,"+")
 scalarprod=function(x,y) mean(x*y)
 
-findCuttofs <- function(chr, cuttof, nGenes, nTimes)
+findCuttofs <- function(chr, percentage, nGenes, nTimes)
 {
   filename = paste("../partitions/", chr, "/partitions_sigma_0.Rda", sep = "")
   partitions <- readRDS(filename)
   
-  r1r2 = partitions$alpha - partitions$beta
+  r1r2 = as.numeric(partitions$alpha) - as.numeric(partitions$beta)
   
-  percentage = length(which(r1r2 > cuttof)) / length(r1r2)
-  
+  cuttof <- quantile(r1r2, percentage/100)
+
   sigma2 = cuttof / (2 * log(nGenes*nTimes))
   
-  c(percentage, sigma2)
+  c(cuttof, sigma2)
 }
 
 model1 = function(M)
@@ -34,9 +34,9 @@ residueModel1 = function(M, BIC=T, sigma2, nDataPoints)
   residue = sum((M - model1(M))^2)
   
   # if(BIC) residue = residue + sigma2 * (m + 1)
-  if(BIC) residue = residue + sigma2 * (m + 1) * log(nDataPoints)
+  if(BIC) score = residue + sigma2 * (m + 1) * log(nDataPoints)
   
-  residue
+  c(score, residue)
 }
 
 model2 = function(M) {
@@ -76,9 +76,9 @@ residueModel2 = function(M, BIC=T, sigma2, nDataPoints)
   residue = sum((M - model2(M))^2)
 
   # if(BIC) residue = residue + sigma2 * (m + 2 + 1)
-  if(BIC) residue = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
+  if(BIC) score = residue + sigma2 * (m + 2 + 1)*log(nDataPoints)
   
-  c(residue, alpha, beta)
+  c(score, residue, alpha, beta)
 }
 
 models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
@@ -92,45 +92,51 @@ models = function(j, M, min.size, max.size, BIC=T, s2, nDataPoints)
 	alpha = 0
 	beta = 0
 	
+	score.1 = 0
+	score.2 = 0
+	
 	res.1 = 0
 	res.2 = 0
 	
-	if(m < min.size | m > max.size) residue = Inf
+	if(m < min.size | m > max.size) score = Inf
 	else {
 		# MODEL 1
-		res.1 = residueModel1(M, BIC, s2, nDataPoints)
+		result1 = residueModel1(M, BIC, s2, nDataPoints)
+		score.1 = result1[1]
+		res.1 = result1[2]
 
 		# MODEL 2
 		result2 = residueModel2(M, BIC, s2, nDataPoints)
-		res.2 = result2[1]
-		alpha = result2[2]
-		beta = result2[3]
+		score.2 = result2[1]
+		res.2 = result2[2]
+		alpha = result2[3]
+		beta = result2[4]
 		
-		r  = c(res.1, res.2)
+		r  = c(score.1, score.2)
 		imin = which.min(r)
-		residue = r[imin]
+		score = r[imin]
 		type = imin
 	}
 	
-	c(residue, type, res.1, res.2, alpha, beta)
+	c(score, type, res.1, res.2, alpha, beta)
 }
 
-partitioning = function(M, min.size=1, max.size=100, BIC, cuttof)
+partitioning = function(M, min.size=1, max.size=100, BIC, percentage, chr)
 {
-  print(paste('Computing the partitions of', chr, 'for cuttof:', cuttof))
+  print(paste('Computing the partitions of ', chr, ' for percentage: ', percentage, '%', sep = ''))
   
   n = nrow(M)
   m = ncol(M)
   
-  sigmaAndPercentage = findCuttofs(chr = chr, cuttof = cuttof, nGenes = m, nTimes = n)
+  sigmaAndPercentage = findCuttofs(chr=chr, percentage=percentage, nGenes=m, nTimes=n)
   
-  percentage = round(sigmaAndPercentage[1] * 100, 2)
+  cuttof = sigmaAndPercentage[1]
   sigma2 = sigmaAndPercentage[2]
   sigma = sqrt(sigma2)
   
 	print(paste('Number of genes :', m))
 	print(paste('Maximum partition size :', max.size))
-	print(paste('Percentage of blocks with circadian model: ', percentage, '%', sep = ''))
+	print(paste('Value of cuttof :', cuttof))
 	print(paste('Value of sigma :', sigma))
 	
 	scores	= rep(0,m)
@@ -197,6 +203,8 @@ partitioning = function(M, min.size=1, max.size=100, BIC, cuttof)
 	     percentage.prior = percentage,
 	     percentage.resulted = rPercentage,
 	     sigma = sigma,
-	     max.size = max.size
+	     max.size = max.size,
+	     chromosome = chr,
+	     nGenes = m
 	     )
 }
