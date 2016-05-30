@@ -2,14 +2,12 @@ source('partitioning.r')
 args <- commandArgs(TRUE)
 
 chr = args[1]
-percentage = as.numeric(args[2])
-maxSize = as.numeric(args[3])
 
 #Choice of matrix to use
 filenameToRead = paste("../rawData/RNA_seq_", chr, ".txt", sep = "")
 M = read.table(filenameToRead, sep="\t", header=T)
 
-partitions = partitioning(M, percentage=percentage, chr=chr, BIC=T, max.size=maxSize)
+partitions = partitioning(M, chr=chr, BIC=F)
 
 #Saving the gene names and parameters
 jj=1
@@ -36,7 +34,7 @@ for(k in partitions$sizes)
 partitions[["Names"]] = Names
 partitions[["Mu"]] = Mu
 
-fileNameToSave = paste('../partitions/', chr, '/partitions_percentage_', percentage, '.Rda', sep = '')
+fileNameToSave = paste('../partitions/', chr, '/partitions_no_penalty.Rda', sep = '')
 saveRDS(partitions, fileNameToSave)
 
 print("Done")

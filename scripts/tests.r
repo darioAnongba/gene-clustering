@@ -7,9 +7,9 @@ for(chr in chrN) {
   M = read.table(rawDataName, sep="\t", header=T)
   
   for(p in percentages) {
-    filename = paste('../partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
+    filename = paste('../partitions/', chr, '/partitions_no_penalty.Rda', sep = '')
     partitions <- readRDS(file = filename)
     
-    plot(partitions$res1, partitions$res2)
+    print(partitions$block.types)
   }
 }
