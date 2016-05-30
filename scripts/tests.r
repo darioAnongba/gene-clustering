@@ -9,8 +9,5 @@ for(chr in chrN) {
   for(cuttof in cuttofs) {
     filename = paste('../partitions/', chr, '/partitions_cuttof_', cuttof, '.Rda', sep = '')
     partitions <- readRDS(file = filename)
-    
-    print(partitions$percentage.theoretical)
-    print(partitions$percentage.real)
   }
 }

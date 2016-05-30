@@ -194,8 +194,8 @@ partitioning = function(M, min.size, max.size, BIC, cuttof)
 	     alphas = alpha,
 	     betas = beta,
 	     cuttof = cuttof,
-	     percentage.theoretical = percentage,
-	     percentage.real = rPercentage,
+	     percentage.prior = percentage,
+	     percentage.resulted = rPercentage,
 	     sigma = sigma,
 	     max.size = max.size
 	     )
