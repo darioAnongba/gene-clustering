@@ -8,7 +8,7 @@ findCuttofs <- function(chr, percentage, nGenes, nTimes)
   
   r1r2 = partitions$res1 - partitions$res2
   
-  cuttof <- quantile(r1r2, percentage/100)
+  cuttof <- quantile(r1r2, 1 - percentage/100)
 
   sigma2 = cuttof / (2 * log(nGenes*nTimes))
   
