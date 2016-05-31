@@ -1,5 +1,5 @@
-chrN = c('chr7')
-percentages = c(20)
+chrN = c('chr19')
+percentages = c(0)
 
 for(chr in chrN) {
   for(p in percentages) {
@@ -12,6 +12,9 @@ for(chr in chrN) {
     s <- ecdf(r)
     curve(1 - s(x), from = 0, to = 4)
     
-    print(quantile(r, 1 - 90/100))
+    for(i in 1:length(partitions$sizes)) {
+      print(partitions$Names[i])
+      readline()
+    }
   }
 }
