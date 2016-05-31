@@ -1,20 +1,18 @@
 chrN = c('chr19')
-percentages = c(0)
+percentages = seq(5, to = 95, by = 5)
 
-for(chr in chrN) {
-  for(p in percentages) {
-    filename = paste('../partitions/', chr, '/partitions_no_penalty.Rda', sep = '')
-    noPenalty <- readRDS(file = filename)
-    filename = paste('../partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
+for (chr in chrN) {
+  sizes <- rep(0, length(percentages))
+  
+  for(i in 1:length(percentages)) {
+    filename = paste('../partitions/', chr, '/partitions_percentage_', percentages[i], '.Rda', sep = '')
     partitions <- readRDS(file = filename)
     
-    r <- noPenalty$res1 - noPenalty$res2
-    s <- ecdf(r)
-    curve(1 - s(x), from = 0, to = 4)
-    
-    for(i in 1:length(partitions$sizes)) {
-      print(partitions$Names[i])
-      readline()
-    }
+    sizes[i] <- mean(partitions$sizes)
   }
+  
+  #plot the simple mean
+  mainTitle = paste('Average size of partitions,', chr)
+  plot(percentages, sizes, main=mainTitle, xlab='percentage of expected circadian blocks', ylab='Average sizes')
+  lines(percentages, sizes)
 }

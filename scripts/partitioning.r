@@ -94,8 +94,8 @@ models = function(j, M, min.size, max.size, BIC, s2, nDataPoints)
 	alpha = 0
 	beta = 0
 	
-	score.1 = 0
-	score.2 = 0
+	score.1 = Inf
+	score.2 = Inf
 	
 	res.1 = 0
 	res.2 = 0
@@ -114,7 +114,7 @@ models = function(j, M, min.size, max.size, BIC, s2, nDataPoints)
 		alpha = result2[3]
 		beta = result2[4]
 		
-		r  = c(score.1, score.2)
+		r = c(score.1, score.2)
 		imin = which.min(r)
 		score = r[imin]
 		type = imin
