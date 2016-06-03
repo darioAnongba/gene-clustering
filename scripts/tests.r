@@ -1,13 +1,21 @@
-chrN = c('chr19')
-percentages = c(40)
+chrN = c('chr3')
+percentages = seq(5, to= 30, by = 5)
 
 for (chr in chrN) {
-  sizes <- rep(0, length(percentages))
+  sizesCircadian <- rep(0, length(percentages))
   
   for(i in 1:length(percentages)) {
     filename = paste('../partitions/', chr, '/partitions_percentage_', percentages[i], '.Rda', sep = '')
     partitions <- readRDS(file = filename)
     
-    print(partitions$alpha)
+    sizesCircadian <- (partitions$sizes[which(partitions$block.types == 2)])
+    
+    print(partitions$sizes)
+    print(sizesCircadian)
+    
+    plot(sizesCircadian)
+    lines(sizesCircadian)
+    
+    readline()
   }
 }

@@ -1,7 +1,7 @@
 chrN = c('chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10',
          'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19',
          'chrX')
-percentages = seq(0, to = 100, by = 5)
+percentages = seq(5, to = 100, by = 5)
 
 for (chr in chrN) {
   sizesFlat <- rep(0, length(percentages))
@@ -12,6 +12,7 @@ for (chr in chrN) {
     partitions <- readRDS(file = filename)
     
     sizesFlat[i] <- mean(partitions$sizes[which(partitions$block.types == 1)])
+    
     sizesCircadian[i] <- mean(partitions$sizes[which(partitions$block.types == 2)])
   }
   
