@@ -1,42 +1,50 @@
 source('partitioning.r')
 
-# chrN = c('chr1', 'chrX', 'chrY')
-chrN = c('chr18')
-percentages = c(59)
+chrN = c('chr7')
+percentages = seq(5, to = 50, by = 5)
 
 for(chr in chrN) {
   #Choice of matrix to use
   rawDataName = paste('../rawData/RNA_seq_', chr, '.txt', sep = '')
   M = read.table(rawDataName, sep="\t", header=T)
   
+  r <- sample(1:51, 1)
+  print(r)
+  
   for(p in percentages) {
-    filename = paste('../partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
-    partitions <- readRDS(file = filename)
+    #Choice of matrix to use
+    fileName = paste('../partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
+    part <- readRDS(fileName)
+    
+    #Choice of matrix to use
+    fileName = paste('../random_partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
+    rPart <- readRDS(fileName)
     
     #Plotting of the models
     jj=1
     K=1
     
-    print(partitions$sizes)
-    print(partitions$block.types)
-    print(partitions$percentage.resulted)
+    print(rPart[[r]]$sizes[which(rPart[[r]]$block.types == 2)])
+    plot(rPart[[r]]$sizes[which(rPart[[r]]$block.types == 2)])
+    lines(rPart[[r]]$sizes[which(rPart[[r]]$block.types == 2)])
     
-    for(k in partitions$sizes)
+    print(part$sizes[which(part$block.types == 2)])
+    plot(part$sizes[which(part$block.types == 2)])
+    lines(part$sizes[which(part$block.types == 2)])
+    
+    for(k in part$sizes)
     {
       kk = jj+k-1
       x = M[,jj:kk]
       x = as.matrix(x)
       if(ncol(x)==1) colnames(x) = colnames(M)[jj]
       
-      if(partitions$types[K] == 1) mainTitle = paste("Flat partition, percentage =", p)
+      if(part$block.types[K] == 1) mainTitle = paste("Flat partition, percentage =", p)
       else mainTitle = paste("Circadian partition, percentage = ", p)
       
-      # We only plot the partitions of size < 5
-      if(partitions$sizes[K] == 5) {
-        print(partitions$Names[K])
-        
-        print(partitions$alphas[K])
-        print(partitions$betas[K])
+      # We only plot the circadian partitions of size > 15
+      if(part$sizes[K] >= 25 && part$block.types[K] == 2) {
+        print(part$Names[K])
         
         #Plotting Models
         matplot(x, pch=1, main=mainTitle)

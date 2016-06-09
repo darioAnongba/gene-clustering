@@ -6,9 +6,10 @@ for (chr in chrN) {
   filename = paste('../partitions/', chr, '/partitions_no_penalty.Rda', sep = '')
   partitions <- readRDS(file = filename)
   
-  title <- paste('Fitting of the models density,', chr)
+  filename <- paste('../graphics/fitting/', chr, '.png', sep = '')
+  png(filename = filename)
+  title <- paste('Fitting of the models,', chr)
   plot(partitions$res1, partitions$res2, main=title, xlab = 'Circadian model', ylab = 'Flat model')
-  
-  filename <- paste('../graphics/fitting/', chr, '.pdf', sep = '')
-  dev.print(pdf, filename)
+  abline(0, 1)
+  dev.off()
 }

@@ -1,10 +1,8 @@
 library(gplots)
 
-chrN = c('chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10',
-         'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19',
-         'chrX', 'chrY')
+chrN = c('chr4')
 
-percentages = seq(5, to = 95, by = 5)
+percentages = seq(5, to = 50, by = 5)
 
 for (chr in chrN) {
   filename = paste('../partitions/', chr, '/partitions_no_penalty.Rda', sep = '')
@@ -13,22 +11,26 @@ for (chr in chrN) {
   heatmap = matrix(0, nrow = length(percentages), ncol = partitions$nGenes)
   rownames(heatmap) <- percentages
   
+  r = 42
+  
   for(i in 1:length(percentages)) {
-    filename = paste('../partitions/', chr, '/partitions_percentage_', percentages[i], '.Rda', sep = '')
+    filename = paste('../random_partitions/', chr, '/partitions_percentage_', percentages[i], '.Rda', sep = '')
     partitions <- readRDS(file = filename)
+
+    part <- partitions[[r]]
     
-    heatmap[i, ] = partitions$types
+    heatmap[i, ] = part$types
   }
   
   # Plotting
-  filename <- paste('../graphics/heatmaps/', chr, '.pdf', sep = '')
+  filename <- paste('../graphics/heatmaps/random/', chr, '.pdf', sep = '')
   pdf(filename, width=8, height=5)
   
   colors <- colorRampPalette(c("yellow", "red"))(n = 2)
   
-  title = paste('Heatmap of percentages,', chr)
+  title = paste('Heatmap of percentages, random,', chr)
   heatmap.2(heatmap, Rowv=F, Colv=F, dendrogram="none", trace="none", col=colors, cexRow=.7,
-            xlab="Gene blocks", ylab="percentages", labCol='', main=title,
+            xlab="Genes", ylab="percentages", labCol='', main=title,
             key=T, symkey=F, density.info="none", key.xlab = 'Flat -> Circadian')
   
   dev.off()

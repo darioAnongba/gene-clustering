@@ -16,19 +16,19 @@ for (chr in chrN) {
     sizesCircadian[i] <- mean(partitions$sizes[which(partitions$block.types == 2)])
   }
   
+  filename <- paste('../graphics/avg_sizes/flat/', chr, '.png', sep = '')
+  png(filename = filename)
   #plot the average size model 1
   mainTitle = paste('Average size of flat partitions', chr)
   plot(percentages, sizesFlat, main=mainTitle, xlab='percentage of expected circadian blocks', ylab='Average sizes')
   lines(percentages, sizesFlat)
+  dev.off()
   
-  filename <- paste('../graphics/avg_sizes/flat/', chr, '.pdf', sep = '')
-  dev.print(pdf, filename)
-  
-  #plot the average size model 1
-  mainTitle = paste('Average size of circadian partitions', chr)
-  plot(percentages, sizesCircadian, main=mainTitle, xlab='percentage of expected circadian blocks', ylab='Average sizes')
-  lines(percentages, sizesCircadian)
-  
-  filename <- paste('../graphics/avg_sizes/circadian/', chr, '.pdf', sep = '')
-  dev.print(pdf, filename)
+  # filename <- paste('../graphics/avg_sizes/circadian/', chr, '.png', sep = '')
+  # png(filename = filename)
+  # #plot the average size model 2
+  # mainTitle = paste('Average size of circadian partitions', chr)
+  # plot(percentages, sizesCircadian, main=mainTitle, xlab='percentage of expected circadian blocks', ylab='Average sizes')
+  # lines(percentages, sizesCircadian)
+  # dev.off()
 }

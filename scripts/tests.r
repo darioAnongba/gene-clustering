@@ -1,13 +1,18 @@
-chrN = c('chr7')
-percentages = c(30)
+chrN = c('chr4')
+percentages = c(40)
 
 for (chr in chrN) {
-  sizesCircadian <- rep(0, length(percentages))
-  
-  for(i in 1:length(percentages)) {
-    #Choice of matrix to use
-    fileName = paste('../random_partitions/', chr, '/partitions_percentage_', percentages[i], '.Rda', sep = '')
-    part <- readRDS(fileName)
+  for(p in percentages) {
+    filename = paste("../partitions/", chr, "/partitions_no_penalty.Rda", sep = "")
+    partitions <- readRDS(filename)
     
+    r1r2 = partitions$res1 - partitions$res2
+    
+    cuttof <- quantile(r1r2, 1 - p/100)
+    
+    sigma2 = cuttof / (2 * log(partitions$nGenes*24))
+    
+    print(cuttof)
+    print(sigma2)
   }
 }
