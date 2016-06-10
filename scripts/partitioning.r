@@ -18,6 +18,7 @@ findCuttofs <- function(chr, percentage, nGenes, nTimes)
 model1 = function(M)
 {
   n = nrow(M)
+  m = ncol(M)
   
   temporalMean = apply(M, 2, mean)
   

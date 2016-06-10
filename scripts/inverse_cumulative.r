@@ -10,9 +10,10 @@ for (chr in chrN) {
   png(filename = filename)
   title <- paste('Inverse cumulative function,', chr)
   r <- ecdf(partitions$res1 - partitions$res2)
-  curve(100 * (1 - r(x)), from=0, to=4, 
-        main=title, xlab = 'Cuttof values', ylab = 'Percentage of circadian blocks')
+  par(mar = c(5, 5, 5, 2))
+  curve(100 * (1 - r(x)), from=0, to=3, 
+        main=title, xlab = 'Cuttof values (res.1 - res.2)', ylab = 'Percentage of circadian blocks',
+        cex.axis = 1.2, cex.lab = 1.6)
   abline(h=40)
   dev.off()
-  
 }

@@ -28,7 +28,7 @@ for(chr in chrN) {
     # png(filename)
     # title = paste('Sizes of partitions,', chr, ',', p, '%')
     # plot(part$sizes[which(part$block.types == 2)],
-    #      xlab="Gene positions", ylab="sizes", main=title)
+    #      xlab="Gene positions", ylab="sizes", main=title, ylim = c(0, 50), cex.axis = 1.2, cex.lab = 1.4)
     # lines(part$sizes[which(part$block.types == 2)])
     # 
     # dev.off
@@ -38,7 +38,7 @@ for(chr in chrN) {
     png(filename)
     title = paste('Sizes of randomized partitions,', chr, ',', p, '%')
     plot(rPart[[r]]$sizes[which(rPart[[r]]$block.types == 2)],
-         xlab="Gene positions", ylab="sizes", main=title)
+         xlab="Gene positions", ylab="sizes", main=title, ylim = c(0, 50), cex.axis = 1.2, cex.lab = 1.4)
     lines(rPart[[r]]$sizes[which(rPart[[r]]$block.types == 2)])
 
     dev.off

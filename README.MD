@@ -1,4 +1,4 @@
-# Spatial organization of genes along mammalian chromosomes
+# An algorithm for spatio-temporal clustering of genes along the chromosomes 
 Dario Anongba Varela - EPFL Bachelor Project - Spring 2016.
 
 ### Project description
@@ -7,7 +7,7 @@ The mammalian genome is organized and packaged as complex structures of chromati
 
 In this project, we combine algorithm development and statistical methods to analyze RNA sequencing (RNA-Seq) data across mouse tissues to segment the chromosome into clusters of genes with correlated gene expression across tissues. _Further, we will use publicly available Hi-C data to infer the long-range physical contacts within each cluster of genes_. The goal of this project will be to elucidate spatial regulatory principles that govern this correlated gene expression.
 
-**Supervisors** : [Saeed Omidi], [Felix Naef], [Jake Yeung]
+**Supervisors** : [Saeed Omidi], [Felix Naef]
 
 **Lab** : [Computational Systems Biology Lab (Felix Naef)][Naef lab] at EPFL
 
@@ -113,6 +113,5 @@ All other scripts are used to generate plots stored in the **graphics** folder.
 
    [Saeed Omidi]: <https://people.epfl.ch/251594>
    [Felix Naef]: <https://people.epfl.ch/felix.naef>
-   [Jake Yeung]: <https://people.epfl.ch/jake.yeung?lang=en>
    [Naef Lab]: <http://naef-lab.epfl.ch/>
    [paper]: <http://arxiv.org/pdf/math/0309285.pdf>

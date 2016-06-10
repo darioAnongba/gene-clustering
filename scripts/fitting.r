@@ -9,7 +9,8 @@ for (chr in chrN) {
   filename <- paste('../graphics/fitting/', chr, '.png', sep = '')
   png(filename = filename)
   title <- paste('Fitting of the models,', chr)
-  plot(partitions$res1, partitions$res2, main=title, xlab = 'Circadian model', ylab = 'Flat model')
+  plot(partitions$res1, partitions$res2, main=title, xlab = 'Residue Circadian model', ylab = 'Residue Flat model',
+       cex.axis = 1.2, cex.lab = 1.4)
   abline(0, 1)
   dev.off()
 }
