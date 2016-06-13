@@ -1,18 +1,19 @@
 source('partitioning.r')
 
 chrN = c('chr7')
-percentages = c(50)
+percentages = c(20)
 
 for(chr in chrN) {
   #Choice of matrix to use
   rawDataName = paste('../rawData/RNA_seq_', chr, '.txt', sep = '')
   M = read.table(rawDataName, sep="\t", header=T)
+  M = M[, 1:5]
   
   for(p in percentages) {
     #Choice of matrix to use
     fileName = paste('../partitions/', chr, '/partitions_percentage_', p, '.Rda', sep = '')
-    part <- readRDS(fileName)
-    
+    part <- partitioning(M, chr, BIC=T, percentage = p)
+    print(part$sizes)
     #Plotting of the models
     jj=1
     K=1

@@ -175,9 +175,8 @@ partitioning = function(M, chr, BIC, min.size=1, max.size=100, percentage=100)
                 nDataPoints=n*m)
     
     s.tmp = s + ss[1,]
-    
+
     jmin = which.min(s.tmp)
-    
     scores[k] = s.tmp[jmin]
     change[k] = jmin
     type[k] = ss[2,jmin]
